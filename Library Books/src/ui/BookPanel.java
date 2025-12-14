@@ -1,10 +1,11 @@
 package ui;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import model.Book;
 import service.BookService;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class BookPanel extends JPanel {
 
@@ -15,36 +16,92 @@ public class BookPanel extends JPanel {
     public BookPanel() {
         setLayout(new BorderLayout());
 
-        model = new DefaultTableModel(
-                new String[]{"ID", "Title", "Author", "ISBN", "Category", "Status"}, 0);
+        // Header
+        JLabel title = new JLabel("Books", JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+        add(title, BorderLayout.NORTH);
 
+        // Table
+        model = new DefaultTableModel(
+                new String[]{"ID", "Title", "Author", "ISBN", "Category", "Status"}, 0
+        );
         table = new JTable(model);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        JButton btnLoad = new JButton("Load Books");
-        btnLoad.addActionListener(e -> loadBooks());
+        // Buttons
+        JPanel buttons = new JPanel();
 
-        JPanel top = new JPanel();
-        top.add(btnLoad);
+        JButton btnAdd = new JButton("Add Book");
+        JButton btnUpdate = new JButton("Update");
+        JButton btnDelete = new JButton("Delete");
 
-        add(top, BorderLayout.NORTH);
+        buttons.add(btnAdd);
+        buttons.add(btnUpdate);
+        buttons.add(btnDelete);
+
+        add(buttons, BorderLayout.SOUTH);
+
+        loadBooks();
+
+        // Actions
+        btnAdd.addActionListener(e ->
+                new BookFormDialog(null, this).setVisible(true)
+        );
+
+        btnUpdate.addActionListener(e -> updateBook());
+
+        btnDelete.addActionListener(e -> deleteBook());
     }
 
-    private void loadBooks() {
+    public void loadBooks() {
         try {
             model.setRowCount(0);
             for (Book b : service.getAllBooks()) {
                 model.addRow(new Object[]{
-                        b.getId(),
-                        b.getTitle(),
-                        b.getAuthor(),
-                        b.getIsbn(),
-                        b.getCategory(),
-                        b.getStatus()
+                        b.getId(), b.getTitle(), b.getAuthor(),
+                        b.getIsbn(), b.getCategory(), b.getStatus()
                 });
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void updateBook() {
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Select a book first");
+            return;
+        }
+
+        Book book = new Book(
+                model.getValueAt(row, 1).toString(),
+                model.getValueAt(row, 2).toString(),
+                model.getValueAt(row, 3).toString(),
+                model.getValueAt(row, 4).toString(),
+                model.getValueAt(row, 5).toString()
+        );
+        book.setId(Integer.parseInt(model.getValueAt(row, 0).toString()));
+
+        new BookFormDialog(book, this).setVisible(true);
+    }
+
+    private void deleteBook() {
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Select a book first");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this, "Delete this book?", "Confirm", JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            service.deleteBook(
+                    Integer.parseInt(model.getValueAt(row, 0).toString())
+            );
+            loadBooks();
         }
     }
 }

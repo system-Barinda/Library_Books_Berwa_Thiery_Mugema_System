@@ -5,7 +5,6 @@ import javax.swing.*;
 
 public class MainFrame extends JFrame {
 
-    private CardLayout cardLayout;
     private JPanel contentPanel;
 
     public MainFrame() {
@@ -15,48 +14,58 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // ===== Sidebar =====
-        JPanel sidebar = new JPanel();
+        JPanel sidebar = new JPanel(new GridLayout(10, 1));
         sidebar.setBackground(new Color(33, 37, 41));
-        sidebar.setLayout(new GridLayout(10, 1, 0, 10));
-        sidebar.setPreferredSize(new Dimension(200, 0));
-
-        JLabel title = new JLabel("Library System", SwingConstants.CENTER);
-        title.setForeground(Color.WHITE);
-        title.setFont(new Font("Arial", Font.BOLD, 16));
 
         JButton btnDashboard = createMenuButton("Dashboard");
-        JButton btnBook = createMenuButton("Book");
+        JButton btnBooks = createMenuButton("Book");
         JButton btnCategory = createMenuButton("Category");
 
-        sidebar.add(title);
         sidebar.add(btnDashboard);
-        sidebar.add(btnBook);
+        sidebar.add(btnBooks);
         sidebar.add(btnCategory);
 
-        // ===== Content =====
-        cardLayout = new CardLayout();
-        contentPanel = new JPanel(cardLayout);
-
-        contentPanel.add(new DashboardPanel(), "dashboard");
-        contentPanel.add(new BookPanel(), "book");
-        contentPanel.add(new CategoryPanel(), "category");
-
-        // ===== Actions =====
-        btnDashboard.addActionListener(e -> cardLayout.show(contentPanel, "dashboard"));
-        btnBook.addActionListener(e -> cardLayout.show(contentPanel, "book"));
-        btnCategory.addActionListener(e -> cardLayout.show(contentPanel, "category"));
+        contentPanel = new JPanel(new BorderLayout());
 
         add(sidebar, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
+
+        showDashboard();
+
+        btnDashboard.addActionListener(e -> showDashboard());
+        btnBooks.addActionListener(e -> showBooks());
+        btnCategory.addActionListener(e -> showCategories());
     }
 
     private JButton createMenuButton(String text) {
         JButton btn = new JButton(text);
         btn.setFocusPainted(false);
-        btn.setBackground(new Color(52, 58, 64));
         btn.setForeground(Color.WHITE);
+        btn.setBackground(new Color(52, 58, 64));
         return btn;
+    }
+
+    private void showDashboard() {
+        contentPanel.removeAll();
+        contentPanel.add(new DashboardPanel(), BorderLayout.CENTER);
+        refresh();
+    }
+
+    private void showBooks() {
+        contentPanel.removeAll();
+        contentPanel.add(new BookPanel(), BorderLayout.CENTER);
+        refresh();
+    }
+
+    private void showCategories() {
+        contentPanel.removeAll();
+        contentPanel.add(new CategoryPanel(), BorderLayout.CENTER);
+        refresh();
+    }
+
+    private void refresh() {
+        contentPanel.revalidate();
+        contentPanel.repaint();
     }
 
     public static void main(String[] args) {
