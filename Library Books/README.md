@@ -16,3 +16,26 @@ Meanwhile, the compiled output files will be generated in the `bin` folder by de
 ## Dependency Management
 
 The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+
+
+
+Project Title: Library Books Management System
+Students:
+- Full Name 1 – Reg No
+- Full Name 2 – Reg No
+
+
+Description:
+A Java Swing desktop application for managing library books using JDBC and OOP principles.
+
+
+Features:
+- Add, View, Update, Delete books
+- RegEx validation
+- JTable display
+
+
+How to Run:
+- Import project
+- Configure JDBC
+- Run LibraryUI
