@@ -1,28 +1,20 @@
 package service;
 
-import model.Fan;
 import java.util.List;
+import model.Fan;
 
 public class FanService {
 
-    public double calculateOverallAverage(List<Fan> fans) {
-        double sum = 0;
-        for (Fan f : fans) {
-            sum += f.getAverageGoals();
-        }
-        return fans.size() == 0 ? 0 : sum / fans.size();
-    }
-
-    public Fan getHighestAverageFan(List<Fan> fans) {
-        Fan topFan = null;
+    public Fan highestAverage(List<Fan> fans) {
+        Fan top = null;
         double max = 0;
 
         for (Fan f : fans) {
-            if (f.getAverageGoals() > max) {
-                max = f.getAverageGoals();
-                topFan = f;
+            if (f.getAverage() > max) {
+                max = f.getAverage();
+                top = f;
             }
         }
-        return topFan;
+        return top;
     }
 }
