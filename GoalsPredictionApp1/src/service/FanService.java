@@ -1,7 +1,7 @@
 package service;
 
-import model.Fan;
 import java.util.List;
+import model.Fan;
 
 public class FanService {
 

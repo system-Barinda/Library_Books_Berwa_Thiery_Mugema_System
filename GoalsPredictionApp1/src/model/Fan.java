@@ -1,7 +1,6 @@
 package model;
 
 public class Fan {
-
     private int id;
     private String name;
     private String team;
@@ -28,6 +27,7 @@ public class Fan {
         return (p1 + p2 + p3) / 3.0;
     }
 
+    // Getters
     public int getId() { return id; }
     public String getName() { return name; }
     public String getTeam() { return team; }
